@@ -7,6 +7,7 @@ function elt(name, className) {
 }
 
 var selectedDifficulty = null;
+var time = null;
 
 function difficulty(Display, plans) {
     //Creating the DOM elements.
@@ -34,15 +35,18 @@ function difficulty(Display, plans) {
             function startLevel(n) {
                 runLevel(new Level(plans[n]), Display, function(status) {
                     if (status == "lost") {
-                        startLevel(n);
+                        time = Date.getTime(startLevel());
+                        //startLevel(0); // starting from level 1
                     } else if (n < plans.length - 1) {
                         startLevel(n + 1);
                     } else {
-                        console.log("You win!");
+                        time -= Date.getTime(); // if this supports math, should be total game time
+                        console.log("You win! It took you: " + str(time) + "ms (i think)");
                     }
                 });
             }
-            startLevel(0);
+            time = Date.getTime(startLevel(0)); // maybe?
+            //startLevel(0);
         });
     });
 }

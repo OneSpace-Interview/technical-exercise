@@ -1,5 +1,10 @@
 .background {
+    /*
+    background-image: url('https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=imgres&cd=&ved=2ahUKEwjop-bL7MLdAhUKzIMKHSOmCQsQjRx6BAgBEAU&url=https%3A%2F%2Fthehockeywriters.com%2Fchicago-blackhawks-logo-history%2F&psig=AOvVaw024ht6FIv3tqDBTwvbutZS&ust=1537301521255143');
+    */
     background: rgb(52, 166, 251);
+    
+    
     table-layout: fixed;
     border-spacing: 0;
 }

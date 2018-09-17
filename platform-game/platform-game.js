@@ -232,7 +232,7 @@ Level.prototype.animate = function(step, keys) {
 };
 
 Level.prototype.playerTouched = function(type, actor) {
-    if (type == "lava" && (this.status == null || this.status == "won")) {
+    if (type == "lava" && (this.status == null || this.status != "won")) {  // ciao user report bug 1 switch not eq
         this.status = "lost";
         this.finishDelay = 1;
     } else if (type == "coin") {
@@ -365,6 +365,8 @@ function runAnimation(frameFunc) {
 var arrows = trackKeys(arrowCodes);
 
 function runLevel(level, Display, andThen) {
+    
+
     var display = new Display(document.body, level);
 
     runAnimation(function(step) {
