@@ -6,6 +6,7 @@ function Level(plan) {
     this.actors = [];
 
     //Building the grid property of this.plan.
+
     for (var y = 0; y < this.height; y++) {
         var line = plan[y];
         var gridLine = [];
@@ -31,7 +32,7 @@ function Level(plan) {
     this.status = this.finishDelay = null; //finishDelay is a placeholder right now. Will be an animation at the completion of the level.
 }
 
-Level.prototype.isFinished = function() {
+Level.prototype.isFinished = function() { 
     return this.status != null && this.finishDelay < 0;
 };
 
@@ -47,6 +48,8 @@ Vector.prototype.times = function(factor) {
     return new Vector(this.x * factor, this.y * factor);
 };
 
+
+// Object that defines the keys used in designing the levels in the gameLevels array
 var actorChars = {
     "@": Player,
     "o": Coin,
@@ -66,8 +69,8 @@ function Lava(pos, ch) {
     this.pos = pos;
     this.size = new Vector(1, 1);
     if (ch == "=") {
-        if (selectedDifficulty == "Hard") {
-            this.speed = new Vector(18, 0);
+        if (selectedDifficulty == "Hard") { 
+            this.speed = new Vector(18, 0); //increases speed of elements based on selected difficulty
         } else if (selectedDifficulty == "Medium") {
             this.speed = new Vector(6, 0);
         } else {
@@ -94,7 +97,7 @@ function Lava(pos, ch) {
 }
 Lava.prototype.type = "lava";
 
-function Coin(pos) {
+function Coin(pos) { //creates coin with animation awarded for completing a level
     this.basePos = this.pos = pos.plus(new Vector(0.2, 0.1));
     this.size = new Vector(0.6, 0.6);
     this.wobble = Math.random() * Math.PI * 2; //Giving the coin a wobble later on, so this randomizes the starting point of the wobble.
@@ -204,8 +207,8 @@ Level.prototype.obstacleAt = function(pos, size) {
         }
     }
 };
-
-Level.prototype.actorAt = function(actor) {
+//below deals with player positioning and movement thorughout the game
+Level.prototype.actorAt = function(actor) { 
     for (var i = 0; i < this.actors.length; i++) {
         var other = this.actors[i];
         if (other != actor &&
@@ -231,7 +234,7 @@ Level.prototype.animate = function(step, keys) {
     }
 };
 
-Level.prototype.playerTouched = function(type, actor) {
+Level.prototype.playerTouched = function(type, actor) { //this kills the player if they touch lava, and sets the game status to lost so it will start over
     if (type == "lava" && (this.status == null || this.status == "won")) {
         this.status = "lost";
         this.finishDelay = 1;
@@ -250,7 +253,7 @@ Level.prototype.playerTouched = function(type, actor) {
 
 //Creating act methods for each actor type.
 
-Lava.prototype.act = function(step, level) {
+Lava.prototype.act = function(step, level) { 
     var newPos = this.pos.plus(this.speed.times(step));
     if (!level.obstacleAt(newPos, this.size)) {
         this.pos = newPos;
@@ -266,12 +269,13 @@ var wobbleDist = 0.07;
 
 Coin.prototype.act = function(step) {
     this.wobble += step * wobbleSpeed;
-    var wobblePos = Math.sin(this.wobble) * wobbleDist;
+    var wobblePos = Math.sin(this.wobble) * wobbleDist; //coin animations
     this.pos = this.basePos.plus(new Vector(0, wobblePos));
 };
 
 var playerSpeed = 7;
 
+//Player movement attached to keystroke
 Player.prototype.moveX = function(step, level, keys) {
     this.speed.x = 0;
     if (keys.left) { this.speed.x -= playerSpeed; };
@@ -290,12 +294,13 @@ Player.prototype.moveX = function(step, level, keys) {
 var gravity = 30;
 var jumpSpeed = 17;
 
+//This handles vertical movement ie jumping
 Player.prototype.moveY = function(step, level, keys) {
     this.speed.y += step * gravity;
     var motion = new Vector(0, this.speed.y * step);
     var newPos = this.pos.plus(motion);
     var obstacle = level.obstacleAt(newPos, this.size);
-    if (obstacle) {
+    if (obstacle) { //damages player if they touch an obstacle
         level.playerTouched(obstacle);
         if (keys.up && this.speed.y > 0) {
             this.speed.y = -jumpSpeed;
@@ -327,7 +332,7 @@ var arrowCodes = {
     38: "up",
     39: "right"
 };
-
+//below code handles keystrokes
 function trackKeys(codes) {
     var pressed = Object.create(null);
 
@@ -345,6 +350,8 @@ function trackKeys(codes) {
     return pressed;
 }
 //Running the game
+
+//To add a timer, I would write a function to add a timing event that starts once a difficulty button is clicked. I'd have a var time = 0; that would increment ++ on each second. Add this in a div element positioned on the game board with CSS.
 function runAnimation(frameFunc) {
     var lastTime = null;
 
