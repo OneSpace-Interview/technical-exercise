@@ -1,4 +1,4 @@
-var gameLevels = [
+var gameLevels = [  //We currently have two game levels. To add a new one, add a new element to this array using the keys from actorChars object
     [
         "         |           v     ",
         "  x                      x ",
